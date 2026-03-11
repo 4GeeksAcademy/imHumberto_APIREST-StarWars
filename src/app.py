@@ -8,7 +8,8 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User
+from models import db, User, Planet, Character
+from sqlalchemy import select
 #from models import Person
 
 app = Flask(__name__)
@@ -52,13 +53,48 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
-@app.route('/test', methods=['GET'])
-def test():
+@app.route('/planet', methods=['GET'])
+def get_planets():
+    all_planets = db.session.execute(select(Planet)).scalars().all()
+    results = list (map(lambda planet: planet.serialize(),all_planets))
+    print(list(results))
+
     response_body = {
-        "msg": "Hello, this is your GET /test response HOLAAAA "
+        "msg": "Hello, this is your GET /planet response ",
+        "planet": results
     }
 
     return jsonify(response_body), 200
+
+@app.route('/planet/<int:planet_id>', methods=['GET'])
+def get_planet(planet_id):
+    print(planet_id)
+    planet = Planet.query.filter_by(id = planet_id).first()
+    print(planet)
+
+    all_planets = Planet.query.all()
+    results = list (map(lambda planet: planet.serialize(),all_planets))
+
+    response_body = {
+        "msg": "Hello, this is your GET /planet response ",
+        "planet": results
+    }
+
+    return jsonify(planet.serialize()), 200
+
+@app.route('/character', methods=['GET'])
+def get_characters():
+    all_characters = db.session.execute(select(Character)).scalars().all()
+    results = list (map(lambda character: character.serialize(),all_characters))
+    print(list(results))
+
+    response_body = {
+        "msg": "Hello, this is your GET /characters response ",
+        "character": results
+    }
+
+    return jsonify(response_body), 200
+
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
