@@ -95,6 +95,20 @@ def get_characters():
 
     return jsonify(response_body), 200
 
+@app.route('/character/<int:character_id>', methods=['GET'])
+def get_character(character_id):
+    character = Character.query.filter_by(id = character_id).first()
+    print(character)
+    all_characters = Character.query.all()
+    results = list (map(lambda character: character.serialize(),all_characters))
+
+    response_body = {
+        "msg": "Hello, this is your GET /characters response ",
+        "character": results
+    }
+
+    return jsonify(character.serialize()), 200
+
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
