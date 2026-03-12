@@ -47,3 +47,19 @@ class Character(db.Model):
             "gender": self.gender,
             # do not serialize the password, its a security breach
         }
+    
+class Favorite(db.Model):
+    __tablename__ = "favorite"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    character_name: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
+    gender: Mapped[str] = mapped_column(String(120), nullable=False)
+
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.character_name,
+            "gender": self.gender,
+            # do not serialize the password, its a security breach
+        }

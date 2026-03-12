@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User, Planet, Character
+from models import db, User, Planet, Character, Favorite
 from sqlalchemy import select
 #from models import Person
 
@@ -109,6 +109,27 @@ def get_character(character_id):
 
     return jsonify(character.serialize()), 200
 
+@app.route('/favorites', methods=['GET'])
+def get_favorites():
+
+    response_body = {
+        "msg": "Hello, this is your GET /favorites response ",
+    }
+
+    return jsonify(response_body), 200
+
+@app.route('/favorites', methods=['POST'])
+def add_favorites():
+    print("Add company")
+    
+    body = request.get_json()
+    print("se va a crear una empresa")
+
+    response_body = {
+        "msg": "FAVORITE POST ",
+    }
+
+    return jsonify(response_body), 200
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
